@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const options = { discriminatorKey: "rol", timestamps: true };
+
 const UsuarioSchema = new mongoose.Schema(
   {
     primerNombre: { type: String, required: true },
@@ -21,14 +23,9 @@ const UsuarioSchema = new mongoose.Schema(
     email: { type: String, unique: true, required: true },
     contrasenia: { type: String, required: true },
     numeroTelefono: { type: String, required: true },
-    rol: {
-      type: String,
-      enum: ["ESTUDIANTE", "DOCENTE", "COORDINADOR"],
-      required: true,
-    },
     institucion: { type: mongoose.Schema.Types.ObjectId, ref: "Institucion" },
   },
-  { timestamps: true }
+  options
 );
 
 module.exports = mongoose.model("Usuario", UsuarioSchema);
