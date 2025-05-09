@@ -25,11 +25,11 @@ app.get("/", (_req, res) => {
   res.status(200).json({ message: "Conectado al backend" });
 });
 
-app.use("/user", userRoutes);
+app.use("/users", userRoutes);
 
-app.use("/institution", institutionRoutes);
+app.use("/institutiones", institutionRoutes);
 
-app.use("/proyecto", projectRoutes);
+app.use("/proyectos", projectRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
