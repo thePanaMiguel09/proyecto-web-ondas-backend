@@ -9,5 +9,5 @@ const estudianteSchema = new mongoose.Schema({
   },
 });
 
-const Estudiante = Usuario.discriminator("estudiante", estudianteSchema);
-export default Estudiante;
+export const Estudiante = Usuario.discriminator("estudiante", estudianteSchema);
+ 

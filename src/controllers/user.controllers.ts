@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import Usuario from "../models/User";
 import bcrypt from "bcryptjs";
-import Estudiante from "../models/Estudiante";
-import Docente from "../models/Docente";
+import {Estudiante} from "../models/Estudiante";
+import {Docente} from "../models/Docente";
 
 export const login = async (req: Request, res: Response) => {
   const { email, contraseña } = req.body;
