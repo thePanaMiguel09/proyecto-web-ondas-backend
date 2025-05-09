@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
+import { Request, Response, RequestHandler } from "express";
 import { Proyecto } from "../models/Project";
 
-export const createProject = async (req: Request, res: Response) => {
+export const createProject:RequestHandler = async (req: Request, res: Response) => {
   const {
     titulo,
     area,
@@ -19,7 +19,7 @@ export const createProject = async (req: Request, res: Response) => {
   try {
     const alreadyExist = await Proyecto.findOne({ id: Number(id) });
     if (alreadyExist)
-      return res.status(401).json({ msg: "Proyecto ya existente" });
+       res.status(401).json({ msg: "Proyecto ya existente" });
 
     const newProyecto = new Proyecto({
       titulo,
@@ -37,8 +37,8 @@ export const createProject = async (req: Request, res: Response) => {
 
     await newProyecto.save();
 
-    return res.status(201).json("Proyecto Creado");
+     res.status(201).json("Proyecto Creado");
   } catch (error) {
-    return res.status(500).json({error});
+     res.status(500).json({error});
   }
 };

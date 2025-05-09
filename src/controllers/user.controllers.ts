@@ -1,26 +1,29 @@
-import { Request, Response } from "express";
+import { Request, RequestHandler, Response } from "express";
 import Usuario from "../models/User";
 import bcrypt from "bcryptjs";
-import {Estudiante} from "../models/Estudiante";
-import {Docente} from "../models/Docente";
+import { Estudiante } from "../models/Estudiante";
+import { Docente } from "../models/Docente";
 
-export const login = async (req: Request, res: Response) => {
+export const login: RequestHandler = async (req: Request, res: Response) => {
   const { email, contraseña } = req.body;
   try {
     const existingUser = await Usuario.findOne({ email });
     if (existingUser)
-      return res.status(400).json({ msg: "El usuario ya está registrado" });
+      res.status(400).json({ msg: "El usuario ya está registrado" });
 
     const passHashed = await bcrypt.hash(contraseña, 10);
     const newUser = new Usuario({ email, contraseña: passHashed });
     await newUser.save();
     res.status(201).json({ msg: "Logged" });
   } catch (error) {
-    return res.status(500).json({ error });
+    res.status(500).json({ error });
   }
 };
 
-export const completarRegistro = async (req: Request, res: Response) => {
+export const completarRegistro = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const {
     id,
     primerNombre,
@@ -38,13 +41,19 @@ export const completarRegistro = async (req: Request, res: Response) => {
     gradoEscolar,
     materiaAsignada,
   } = req.body;
-  try {
-    const findUser = await Usuario.findById({ _id: id });
-    if (!findUser)
-      return res.status(404).json({ msg: "Usuario no encontrado" });
 
-    if (findUser.rol !== "pendiente")
-      return res.status(400).json({ msg: "Usuario ya registrado" });
+  try {
+    const findUser = await Usuario.findById(id);
+
+    if (!findUser) {
+      res.status(404).json({ msg: "Usuario no encontrado" });
+      return;
+    }
+
+    if (findUser.rol !== "pendiente") {
+      res.status(400).json({ msg: "Usuario ya registrado" });
+      return;
+    }
 
     findUser.set({
       primerNombre,
@@ -63,40 +72,29 @@ export const completarRegistro = async (req: Request, res: Response) => {
 
     await findUser.save();
 
-    let usuarioConRol;
     switch (rol) {
       case "estudiante":
-        usuarioConRol = await Estudiante.findByIdAndUpdate(
-          id,
-          { gradoEscolar },
-          { new: true }
-        );
+        await Estudiante.findByIdAndUpdate(id, { gradoEscolar }, { new: true });
         break;
       case "docente":
-        usuarioConRol = await Docente.findByIdAndUpdate(
-          id,
-          { materiaAsignada },
-          { new: true }
-        );
+        await Docente.findByIdAndUpdate(id, { materiaAsignada }, { new: true });
         break;
       default:
-        res.status(500).json({ msg: "Rol no existente" });
-
-        break;
+        res.status(400).json({ msg: "Rol no existente" });
+        return;
     }
-    return res.status(200).json({ msg: "Perfil registrado" });
+
+    res.status(200).json({ msg: "Perfil registrado" });
   } catch (error) {
-    res.status(500).json({ mensaje: "Error en el servidor", error: error });
+    res.status(500).json({ mensaje: "Error en el servidor", error });
   }
 };
 
-export const getUsers = async (req: Request, res: Response) => {
+export const getUsers: RequestHandler = async (req: Request, res: Response) => {
   try {
     const data = await Usuario.find();
-    return res
-      .status(200)
-      .json({ msg: "Usuarios obtenidos con éxtio", data: data });
+    res.status(200).json({ msg: "Usuarios obtenidos con éxtio", data: data });
   } catch (error) {
-    return res.status(500).json({ msg: "Error al obtener usuarios" });
+    res.status(500).json({ msg: "Error al obtener usuarios" });
   }
 };
