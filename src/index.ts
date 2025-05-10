@@ -27,9 +27,9 @@ app.get("/", (_req, res) => {
 
 app.use("/users", userRoutes);
 
-app.use("/institutiones", institutionRoutes);
+app.use("/institutions", institutionRoutes);
 
-app.use("/proyectos", projectRoutes);
+app.use("/projects", projectRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
