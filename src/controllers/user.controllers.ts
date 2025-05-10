@@ -1,26 +1,11 @@
 import { Request, RequestHandler, Response } from "express";
 import Usuario from "../models/User";
-import bcrypt from "bcryptjs";
 import { Estudiante } from "../models/Estudiante";
 import { Docente } from "../models/Docente";
 
-export const login: RequestHandler = async (req: Request, res: Response) => {
-  const { email, contraseña } = req.body;
-  try {
-    const existingUser = await Usuario.findOne({ email });
-    if (existingUser)
-      res.status(400).json({ msg: "El usuario ya está registrado" });
 
-    const passHashed = await bcrypt.hash(contraseña, 10);
-    const newUser = new Usuario({ email, contraseña: passHashed });
-    await newUser.save();
-    res.status(201).json({ msg: "Logged" });
-  } catch (error) {
-    res.status(500).json({ error });
-  }
-};
 
-export const completarRegistro = async (
+export const registrarUsuario = async (
   req: Request,
   res: Response
 ): Promise<void> => {

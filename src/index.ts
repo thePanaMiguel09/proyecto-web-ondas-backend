@@ -5,6 +5,7 @@ import { connectDB } from "./config/dataBaseConnection";
 import userRoutes from "./routes/userRoutes";
 import institutionRoutes from "./routes/institutionRoutes";
 import projectRoutes from "./routes/ProjectRoutes";
+import authRoutes from "./routes/authRoutes";
 
 dotenv.config();
 
@@ -24,6 +25,9 @@ connectDB();
 app.get("/", (_req, res) => {
   res.status(200).json({ message: "Conectado al backend" });
 });
+
+
+app.use("/auth", authRoutes);
 
 app.use("/users", userRoutes);
 
