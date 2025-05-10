@@ -17,9 +17,25 @@ export const login: RequestHandler = async (req: Request, res: Response) => {
     return;
   }
 
-  res
-    .status(200)
-    .json({
-      msg: `Bienvenido ${userFind.primerNombre! + userFind.primerApellido}`,
-    });
+  res.status(200).json({
+    msg: `Bienvenido ${userFind.primerNombre! + userFind.primerApellido}`,
+  });
+};
+
+export const signUp: RequestHandler = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  const verifyEmail = await User.findOne({ email: email });
+
+  if (verifyEmail) {
+    res.status(401).json({ msg: "Correo ya existe" });
+    return;
+  }
+
+  const passwordEncrypted = await bcrypt.hash(password, 10);
+
+  const newUser = new User({ email: email, contraseña: passwordEncrypted });
+
+  await newUser.save();
+  res.status(201).json({msg:"Cuenta creada con éxito"});
 };

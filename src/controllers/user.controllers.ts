@@ -3,8 +3,6 @@ import Usuario from "../models/User";
 import { Estudiante } from "../models/Estudiante";
 import { Docente } from "../models/Docente";
 
-
-
 export const registrarUsuario = async (
   req: Request,
   res: Response
