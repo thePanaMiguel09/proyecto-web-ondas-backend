@@ -1,11 +1,16 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import swaggerUi from "swagger-ui-express";
+
 import { connectDB } from "./config/dataBaseConnection";
+
 import userRoutes from "./routes/userRoutes";
 import institutionRoutes from "./routes/institutionRoutes";
 import projectRoutes from "./routes/ProjectRoutes";
 import authRoutes from "./routes/authRoutes";
+
+import { swaggerSpec } from "./swagger";
 
 dotenv.config();
 
@@ -34,7 +39,10 @@ app.use("/institutions", institutionRoutes);
 
 app.use("/projects", projectRoutes);
 
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`🚀 Servidor escuchando en el puerto ${PORT}`);
+  console.log(`Swagger disponible en http://localhost:${PORT}/api-docs`);
 });
