@@ -33,20 +33,18 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
   try {
     const verifyEmail = await User.findOne({ email: email });
 
-  if (verifyEmail) {
-    res.status(401).json({ msg: "Ya existe una cuenta con este correo" });
-    return;
-  }
+    if (verifyEmail) {
+      res.status(401).json({ msg: "Ya existe una cuenta con este correo" });
+      return;
+    }
 
-  const passwordEncrypted = await bcrypt.hash(password, 10);
+    const passwordEncrypted = await bcrypt.hash(password, 10);
 
-  const newUser = new User({ email: email, contraseña: passwordEncrypted });
+    const newUser = new User({ email: email, contraseña: passwordEncrypted });
 
-  await newUser.save();
-  res.status(201).json({ msg: "Cuenta creada con éxito" });
+    await newUser.save();
+    res.status(201).json({ msg: "Cuenta creada con éxito" });
   } catch (error) {
-    res.status(500).json({msg: "Error interno del servidor"});
+    res.status(500).json({ msg: "Error interno del servidor" });
   }
-
-  
 };
