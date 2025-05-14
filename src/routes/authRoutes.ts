@@ -40,7 +40,7 @@ const router = Router();
  *       401:
  *         description: Contraseña Incorrecta
  *       500:
- *         description: Error interno del servidor   
+ *         description: Error interno del servidor
  */
 router.post("/login", login);
 

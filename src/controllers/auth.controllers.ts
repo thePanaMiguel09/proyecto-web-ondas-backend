@@ -28,7 +28,14 @@ export const login: RequestHandler = async (req: Request, res: Response) => {
 };
 
 export const signUp: RequestHandler = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const {
+    firstName,
+    secondName,
+    firstLastName,
+    secondLastName,
+    email,
+    password,
+  } = req.body;
 
   try {
     const verifyEmail = await User.findOne({ email: email });
@@ -40,7 +47,14 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
 
     const passwordEncrypted = await bcrypt.hash(password, 10);
 
-    const newUser = new User({ email: email, contraseña: passwordEncrypted });
+    const newUser = new User({
+      primerNombre: firstName,
+      segundoNombre: secondName,
+      primerApellido: firstLastName,
+      segundoApellido: secondLastName,
+      email: email,
+      contraseña: passwordEncrypted,
+    });
 
     await newUser.save();
     res.status(201).json({ msg: "Cuenta creada con éxito" });

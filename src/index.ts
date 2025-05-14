@@ -31,6 +31,11 @@ app.get("/", (_req, res) => {
   res.status(200).json({ message: "Conectado al backend" });
 });
 
+app.get("/swagger.json", (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  res.send(swaggerSpec);
+});
+
 app.use("/auth", authRoutes);
 
 app.use("/users", userRoutes);
