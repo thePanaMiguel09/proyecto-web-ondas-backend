@@ -1,6 +1,9 @@
 import { Request, Response, RequestHandler } from "express";
 import User from "../models/User";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+
+const JWT_SECRET = process.env.JWT_SECRET || "secretoXD";
 
 export const login: RequestHandler = async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -19,11 +22,30 @@ export const login: RequestHandler = async (req: Request, res: Response) => {
       return;
     }
 
+    const token = jwt.sign(
+      {
+        id: userFind._id,
+        rol: userFind.rol,
+      },
+      JWT_SECRET as string,
+      { expiresIn: "1h" }
+    );
+
     res.status(200).json({
-      msg: `Bienvenido ${userFind.primerNombre! + userFind.primerApellido}`,
+      msg: "Login exitoso",
+      token,
+      usuario: {
+        id: userFind._id,
+        email: userFind.email,
+        rol: userFind.rol,
+      },
     });
   } catch (error) {
-    res.status(500).json({ msg: "Error interno del servidor" });
+    console.error("Login error:", error);
+
+    res.status(500).json({
+      msg: "Error interno del servidor dentra al controlador del login",
+    });
   }
 };
 

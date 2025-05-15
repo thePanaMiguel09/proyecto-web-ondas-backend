@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { getUsers, registrarUsuario } from "../controllers/user.controllers";
+import { verifyToken } from "../middlewares/validate-token";
+import { authorizeRoutes } from "../middlewares/authorize-roles";
 
 const router = Router();
 
@@ -34,7 +36,7 @@ const router = Router();
  *       500:
  *         description: Error al obtener usuarios
  */
-router.get("/", getUsers);
+router.get("/", verifyToken, authorizeRoutes("coordinador"), getUsers);
 
 /**
  * @swagger
@@ -118,6 +120,8 @@ router.get("/", getUsers);
  *       500:
  *         description: Error en el servidor
  */
-router.post("/register", registrarUsuario);
+router.post("/register", verifyToken,authorizeRoutes('coordinador'),registrarUsuario);
+
+router.get("/profile", verifyToken, getUsers);
 
 export default router;

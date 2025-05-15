@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { createProject } from "../controllers/project.controllers";
+import { verifyToken } from "../middlewares/validate-token";
+import { authorizeRoutes } from "../middlewares/authorize-roles";
 
 const router = Router();
 
@@ -75,6 +77,6 @@ const router = Router();
  *         description: Error en el servidor
  */
 
-router.post("/", createProject);
+router.post("/", verifyToken,authorizeRoutes('coordinador'),createProject);
 
 export default router;

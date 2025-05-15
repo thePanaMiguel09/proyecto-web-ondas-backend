@@ -5,6 +5,8 @@ import {
   getSingleInstitution,
   upDateInstitution,
 } from "../controllers/institution.controllers";
+import { verifyToken } from "../middlewares/validate-token";
+import { authorizeRoutes } from "../middlewares/authorize-roles";
 
 const router = Router();
 
@@ -49,7 +51,12 @@ const router = Router();
  *         description: Error en el servidor
  */
 
-router.post("/", createInstitution);
+router.post(
+  "/",
+  verifyToken,
+  authorizeRoutes("coordinador"),
+  createInstitution
+);
 
 /**
  * @swagger
@@ -66,7 +73,7 @@ router.post("/", createInstitution);
  *         description: Error al obtener las instituciones
  */
 
-router.get("/", getAllInstitution);
+router.get("/", verifyToken, authorizeRoutes('coordinador'),getAllInstitution);
 
 /**
  * @swagger
@@ -91,7 +98,7 @@ router.get("/", getAllInstitution);
  *         description: Error al obtener la institución
  */
 
-router.get("/:id", getSingleInstitution);
+router.get("/:id", verifyToken, authorizeRoutes('coordinador'),getSingleInstitution);
 
 /**
  * @swagger
@@ -138,6 +145,6 @@ router.get("/:id", getSingleInstitution);
  *         description: Error al actualizar la institución
  */
 
-router.patch("/:id", upDateInstitution);
+router.patch("/:id", verifyToken,authorizeRoutes('coordinador'), upDateInstitution);
 
 export default router;
