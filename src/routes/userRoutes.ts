@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { getUsers, registrarUsuario } from "../controllers/user.controllers";
+import {
+  createAdmin,
+  deleteUser,
+  getUsers,
+  registrarUsuario,
+} from "../controllers/user.controllers";
 import { verifyToken } from "../middlewares/validate-token";
 import { authorizeRoutes } from "../middlewares/authorize-roles";
 
@@ -9,7 +14,7 @@ const router = Router();
  * @swagger
  * tags:
  *   name: Usuarios
- *   description: Endpoints relacionados con usuarios
+ *   description: Endpoints para la gestión de usuarios
  */
 
 /**
@@ -120,8 +125,17 @@ router.get("/", verifyToken, authorizeRoutes("coordinador"), getUsers);
  *       500:
  *         description: Error en el servidor
  */
-router.post("/register", verifyToken,authorizeRoutes('coordinador'),registrarUsuario);
+router.post(
+  "/register",
+  verifyToken,
+  authorizeRoutes("coordinador"),
+  registrarUsuario
+);
+
+router.delete("/:id", verifyToken, authorizeRoutes("coordinador"), deleteUser);
 
 router.get("/profile", verifyToken, getUsers);
+
+router.post("/create-admin", createAdmin);
 
 export default router;

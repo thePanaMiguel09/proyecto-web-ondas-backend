@@ -77,6 +77,6 @@ const router = Router();
  *         description: Error en el servidor
  */
 
-router.post("/", verifyToken,authorizeRoutes('coordinador'),createProject);
+router.post("/", verifyToken, authorizeRoutes("docente"), createProject);
 
 export default router;

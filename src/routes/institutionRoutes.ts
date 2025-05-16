@@ -12,6 +12,13 @@ const router = Router();
 
 /**
  * @swagger
+ * tags:
+ *   name: Instituciones
+ *   description: Endpoints para la gestión de instituciones
+ */
+
+/**
+ * @swagger
  * /instituciones:
  *   post:
  *     summary: Crea una nueva institución educativa
@@ -51,6 +58,7 @@ const router = Router();
  *         description: Error en el servidor
  */
 
+//Crear una institución
 router.post(
   "/",
   verifyToken,
@@ -73,7 +81,12 @@ router.post(
  *         description: Error al obtener las instituciones
  */
 
-router.get("/", verifyToken, authorizeRoutes('coordinador'),getAllInstitution);
+router.get(
+  "/",
+  verifyToken,
+  authorizeRoutes("coordinador", "docente", "estudiante"),
+  getAllInstitution
+);
 
 /**
  * @swagger
@@ -98,7 +111,12 @@ router.get("/", verifyToken, authorizeRoutes('coordinador'),getAllInstitution);
  *         description: Error al obtener la institución
  */
 
-router.get("/:id", verifyToken, authorizeRoutes('coordinador'),getSingleInstitution);
+router.get(
+  "/:id",
+  verifyToken,
+  authorizeRoutes("coordinador", "docente", "estudiante"),
+  getSingleInstitution
+);
 
 /**
  * @swagger
@@ -145,6 +163,11 @@ router.get("/:id", verifyToken, authorizeRoutes('coordinador'),getSingleInstitut
  *         description: Error al actualizar la institución
  */
 
-router.patch("/:id", verifyToken,authorizeRoutes('coordinador'), upDateInstitution);
+router.patch(
+  "/:id",
+  verifyToken,
+  authorizeRoutes("coordinador"),
+  upDateInstitution
+);
 
 export default router;
