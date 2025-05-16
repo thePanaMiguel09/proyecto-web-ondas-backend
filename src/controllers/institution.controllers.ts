@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Request, RequestHandler, Response } from "express";
 import { Institucion } from "../models/Institucion";
 
 export const createInstitution = async (
@@ -73,5 +73,42 @@ export const upDateInstitution = async (
     res.status(200).json(upDated);
   } catch (error) {
     res.status(500).json({ msg: "Error al actualizar la institución" });
+  }
+};
+
+export const deleteInstitution: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const { id } = req.body;
+
+  try {
+    if (!(await Institucion.findById(id))) {
+      res.status(404).json({ msg: "Institución no encontrada" });
+      return;
+    }
+
+    await Institucion.findByIdAndUpdate(id, { isActive: false });
+    res.status(200).json({ msg: "Institución Eliminada" });
+  } catch (error) {
+    res.status(500).json({ err: error });
+  }
+};
+
+export const getActiveInstitutions: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const institucions = await Institucion.find({ isActive: true });
+
+    if (institucions === null) {
+      res.status(404).json({ msg: "No se encontraron instituciones activas" });
+      return;
+    }
+
+    res.status(200).json({ msg: "Instituciones activas", data: institucions });
+  } catch (error) {
+    res.status(500).json({ err: error });
   }
 };
