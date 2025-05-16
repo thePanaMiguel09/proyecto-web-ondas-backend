@@ -45,8 +45,12 @@ const usuarioSchema = new mongoose.Schema({
 
   rol: {
     type: String,
-    enum: ['estudiante', 'docente', 'coordinador', 'pendiente'],
+    enum: ['estudiante', 'docente', 'coordinador', 'pendiente', 'SUPERADMIN'],
     default: 'pendiente'
+  },
+  isActive:{
+    type:Boolean,
+    default: true
   }
 }, {
   discriminatorKey: 'rol',
