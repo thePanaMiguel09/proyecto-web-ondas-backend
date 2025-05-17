@@ -1,6 +1,12 @@
 // models/Proyecto.ts
 import mongoose, { Schema, Document } from "mongoose";
 
+interface Avance {
+  descripcion: string;
+  fecha: Date;
+  evidencias: string[];
+}
+
 export interface Project extends Document {
   titulo: string;
   area: string;
@@ -12,12 +18,11 @@ export interface Project extends Document {
   integrantes: mongoose.Types.ObjectId[];
   observaciones?: string;
   estadoActual: string;
-  id: number;
+  avances: Avance[];
 }
 
 const ProyectoSchema = new Schema<Project>(
   {
-    id: {type:Number, required: true, unique: true},
     titulo: { type: String, required: true },
     area: { type: String, required: true },
     objetivos: { type: String, required: true },
@@ -37,9 +42,9 @@ const ProyectoSchema = new Schema<Project>(
     },
 
     integrantes: {
-        type: [Schema.Types.ObjectId],
-        ref: "Estudiante",
-        required: true,
+      type: [Schema.Types.ObjectId],
+      ref: "Estudiante",
+      required: true,
     },
 
     observaciones: {
@@ -58,7 +63,13 @@ const ProyectoSchema = new Schema<Project>(
       ],
       default: "Planeación",
     },
-
+    avances: [
+      {
+        descripcion: { type: String, required: true },
+        fecha: { type: Date, default: Date.now },
+        evidencias: [{type: String}]
+      },
+    ],
   },
   { timestamps: true }
 );

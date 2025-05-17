@@ -23,7 +23,6 @@ export const registrarUsuario = async (
     materiaAsignada,
   } = req.body;
 
-
   try {
     const findUser = await Usuario.findById(id);
 
@@ -77,8 +76,6 @@ export const getUsers: RequestHandler = async (req: Request, res: Response) => {
     res.status(500).json({ msg: "Error al obtener usuarios" });
   }
 };
-
-
 
 //Crear súper admin
 export const createAdmin: RequestHandler = async (

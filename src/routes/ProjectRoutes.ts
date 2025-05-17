@@ -1,7 +1,11 @@
 import { Router } from "express";
-import { createProject } from "../controllers/project.controllers";
+import {
+  createAdvance,
+  createProject,
+} from "../controllers/project.controllers";
 import { verifyToken } from "../middlewares/validate-token";
 import { authorizeRoutes } from "../middlewares/authorize-roles";
+import upload from "../middlewares/multer-upload";
 
 const router = Router();
 
@@ -18,7 +22,6 @@ const router = Router();
  *           schema:
  *             type: object
  *             required:
- *               - id
  *               - titulo
  *               - area
  *               - objetivos
@@ -78,5 +81,13 @@ const router = Router();
  */
 
 router.post("/", verifyToken, authorizeRoutes("docente"), createProject);
+
+router.post(
+  "/advances/:id",
+  verifyToken,
+  authorizeRoutes("estudiante", "docente"),
+  upload.single("imagen"),
+  createAdvance
+);
 
 export default router;
