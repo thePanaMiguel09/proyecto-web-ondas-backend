@@ -1,6 +1,6 @@
 // src/middlewares/upload.ts
 import multer from "multer";
-import { storage } from "../config/cloudinary-config";
+import {storage} from "../config/cloudinary-config";
 
 const upload = multer({ storage });
 
