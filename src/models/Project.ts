@@ -19,6 +19,7 @@ export interface Project extends Document {
   observaciones?: string;
   estadoActual: string;
   avances: Avance[];
+  historialEstados: Object[];
 }
 
 const ProyectoSchema = new Schema<Project>(
@@ -37,13 +38,13 @@ const ProyectoSchema = new Schema<Project>(
 
     docente: {
       type: Schema.Types.ObjectId,
-      ref: "Docente",
+      ref: "Usuario",
       required: true,
     },
 
     integrantes: {
       type: [Schema.Types.ObjectId],
-      ref: "Estudiante",
+      ref: "Usuario",
       required: true,
     },
 
@@ -54,20 +55,37 @@ const ProyectoSchema = new Schema<Project>(
     estadoActual: {
       type: String,
       required: true,
-      enum: [
-        "Planeación",
-        "En desarrollo",
-        "Finalizado",
-        "Suspendido",
-        "Cancelado",
-      ],
-      default: "Planeación",
+      enum: ["Formulación", "Evaluación", "Activo", "Inactivo", "Finalizado"],
+      default: "Formulación",
     },
     avances: [
       {
         descripcion: { type: String, required: true },
         fecha: { type: Date, default: Date.now },
-        evidencias: [{type: String}]
+        evidencias: [{ type: String }],
+      },
+    ],
+    historialEstados: [
+      {
+        estado: {
+          type: String,
+          enum: [
+            "Formulación",
+            "Evaluación",
+            "Activo",
+            "Inactivo",
+            "Finalizado",
+          ],
+          required: true,
+        },
+        observacion: {
+          type: String,
+          required: true,
+        },
+        fecha: {
+          type: Date,
+          default: Date.now,
+        },
       },
     ],
   },

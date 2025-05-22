@@ -5,7 +5,6 @@ import mongoose from "mongoose";
 const docenteSchema = new mongoose.Schema({
   materiaAsignada: {
     type: String,
-    required: false,
   },
 });
 

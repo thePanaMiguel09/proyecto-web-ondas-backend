@@ -2,6 +2,10 @@ import { Router } from "express";
 import {
   createAdvance,
   createProject,
+  getAllProjects,
+  getCurrentState,
+  getSingleProject,
+  updateState,
 } from "../controllers/project.controllers";
 import { verifyToken } from "../middlewares/validate-token";
 import { authorizeRoutes } from "../middlewares/authorize-roles";
@@ -80,14 +84,26 @@ const router = Router();
  *         description: Error en el servidor
  */
 
-router.post("/", verifyToken, authorizeRoutes("docente"), createProject);
+router.post("/", verifyToken, authorizeRoutes("DOCENTE"), createProject);
+
+router.get("/", verifyToken, getAllProjects);
+
+router.get("/:id", verifyToken, getSingleProject);
 
 router.post(
   "/advances/:id",
   verifyToken,
-  authorizeRoutes("estudiante", "docente"),
-  upload.single("imagen"),
+  authorizeRoutes("ESTUDIANTE", "DOCENTE"),
+  upload.single("file"),
   createAdvance
 );
 
+router.patch(
+  "/:id/estado",
+  verifyToken,
+  authorizeRoutes("COORDINADOR"),
+  updateState
+);
+
+router.get("/:id/estado", verifyToken, getCurrentState);
 export default router;

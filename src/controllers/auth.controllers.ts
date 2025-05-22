@@ -2,6 +2,7 @@ import { Request, Response, RequestHandler } from "express";
 import User from "../models/User";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { json } from "stream/consumers";
 
 const JWT_SECRET = process.env.JWT_SECRET || "secretoXD";
 
@@ -50,37 +51,45 @@ export const login: RequestHandler = async (req: Request, res: Response) => {
 };
 
 export const signUp: RequestHandler = async (req: Request, res: Response) => {
-  const {
-    firstName,
-    secondName,
-    firstLastName,
-    secondLastName,
-    email,
-    password,
-  } = req.body;
+  const { nombres, apellidos, email, password, id } = req.body;
+
+  
 
   try {
     const verifyEmail = await User.findOne({ email: email });
+    const verifyId = await User.findOne({ numeroIdentificacion: Number(id) });
 
-    if (verifyEmail) {
-      res.status(401).json({ msg: "Ya existe una cuenta con este correo" });
+    if (verifyEmail && verifyId) {
+      res.status(401).json({
+        msg: "Ya existe una cuenta con este correo o número de identificación",
+      });
       return;
     }
 
     const passwordEncrypted = await bcrypt.hash(password, 10);
 
     const newUser = new User({
-      primerNombre: firstName,
-      segundoNombre: secondName,
-      primerApellido: firstLastName,
-      segundoApellido: secondLastName,
+      nombres: nombres,
+      apellidos: apellidos,
       email: email,
       contraseña: passwordEncrypted,
+      numeroIdentificacion: id,
     });
 
     await newUser.save();
-    res.status(201).json({ msg: "Cuenta creada con éxito" });
+
+    const token = jwt.sign(
+      {
+        id: newUser._id,
+        rol: newUser.rol,
+      },
+      JWT_SECRET as string,
+      { expiresIn: "1h" }
+    );
+
+    res.status(201).json({ msg: "Cuenta creada con éxito", token: token });
   } catch (error) {
+    console.error("Error en signUp:", error);
     res.status(500).json({ msg: "Error interno del servidor" });
   }
 };

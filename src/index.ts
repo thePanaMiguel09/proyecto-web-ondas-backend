@@ -26,7 +26,7 @@ app.use(express.json());
 
 connectDB();
 
-app.get("/", (_req, res) => {
+app.get("/api", (_req, res) => {
   res.status(200).json({ message: "Conectado al backend" });
 });
 
@@ -35,13 +35,13 @@ app.get("/swagger.json", (req, res) => {
   res.send(swaggerSpec);
 });
 
-app.use("/auth", authRoutes);
+app.use("/api/auth", authRoutes);
 
-app.use("/users", userRoutes);
+app.use("/api/users", userRoutes);
 
-app.use("/institutions", institutionRoutes);
+app.use("/api/institutions", institutionRoutes);
 
-app.use("/projects", projectRoutes);
+app.use("/api/projects", projectRoutes);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 

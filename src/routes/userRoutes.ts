@@ -4,6 +4,7 @@ import {
   deleteUser,
   getUsers,
   registrarUsuario,
+  upDateUser,
 } from "../controllers/user.controllers";
 import { verifyToken } from "../middlewares/validate-token";
 import { authorizeRoutes } from "../middlewares/authorize-roles";
@@ -134,6 +135,9 @@ router.post(
 
 router.delete("/:id", verifyToken, authorizeRoutes("coordinador"), deleteUser);
 
+router.patch("/:id", verifyToken, authorizeRoutes("coordinador"), upDateUser);
+
+//falta
 router.get("/profile", verifyToken, getUsers);
 
 router.post("/create-admin", createAdmin);

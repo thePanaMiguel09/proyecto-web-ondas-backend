@@ -12,7 +12,6 @@ export const registrarUsuario = async (
   const {
     id,
     tipoIdentificacion,
-    numeroIdentificacion,
     fechaNacimiento,
     lugarNacimiento,
     edad,
@@ -31,14 +30,13 @@ export const registrarUsuario = async (
       return;
     }
 
-    if (findUser.rol !== "pendiente") {
+    if (findUser.rol !== "PENDIENTE") {
       res.status(400).json({ msg: "Usuario ya registrado" });
       return;
     }
 
     findUser.set({
       tipoIdentificacion,
-      numeroIdentificacion,
       fechaNacimiento,
       lugarNacimiento,
       edad,
@@ -49,12 +47,14 @@ export const registrarUsuario = async (
 
     await findUser.save();
 
+    
+
     switch (rol) {
-      case "estudiante":
-        await Estudiante.findByIdAndUpdate(id, { gradoEscolar }, { new: true });
+      case "ESTUDIANTE":
+        await Usuario.findByIdAndUpdate(id, { gradoEscolar }, { new: true });
         break;
-      case "docente":
-        await Docente.findByIdAndUpdate(id, { materiaAsignada }, { new: true });
+      case "DOCENTE":
+        await Usuario.findByIdAndUpdate(id, { materiaAsignada }, { new: true });
         break;
       default:
         res.status(400).json({ msg: "Rol no existente" });
@@ -82,7 +82,7 @@ export const createAdmin: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  const { email, password, firstName, firstLastName, seconLastName } = req.body;
+  const { email, password, nombres, apellidos } = req.body;
 
   const findedEmail = await Usuario.findOne({ email: email });
   if (findedEmail) {
@@ -95,9 +95,8 @@ export const createAdmin: RequestHandler = async (
   const newUserAdmin = new Usuario({
     email: email,
     contraseña: hashedPassword,
-    primerNombre: firstName,
-    primerApellido: firstLastName,
-    segundoApellido: seconLastName,
+    nombres: nombres,
+    apellidos: apellidos,
     rol: "SUPERADMIN",
   });
 
@@ -132,5 +131,35 @@ export const deleteUser: RequestHandler = async (
     res.status(200).json({ msg: "Usuario eliminado" });
   } catch (error) {
     res.status(500).json({ msg: "Error interno del servidor", err: error });
+  }
+};
+
+export const upDateUser: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const id = req.params.id;
+  const updated = req.body;
+
+  console.log("ID:", id);
+  console.log("Data a actualizar:", updated);
+
+  try {
+    const user = await Usuario.findOneAndUpdate(
+      { numeroIdentificacion: Number(id) },
+      updated,
+      { new: true, runValidators: false }
+    );
+
+    if (!user) {
+      res.status(404).json({ msg: "Usuario no encontrado" });
+      return;
+    }
+    console.log("Resultado:", user);
+
+    res.status(202).json({ msg: "Usuario actualizado" });
+    return;
+  } catch (error) {
+    res.status(500).json({ msg: error });
   }
 };
