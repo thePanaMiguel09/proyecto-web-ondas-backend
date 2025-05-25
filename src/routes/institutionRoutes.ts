@@ -62,7 +62,7 @@ const router = Router();
 router.post(
   "/",
   verifyToken,
-  authorizeRoutes("coordinador"),
+  authorizeRoutes("COORDINADOR"),
   createInstitution
 );
 
@@ -84,7 +84,7 @@ router.post(
 router.get(
   "/",
   verifyToken,
-  authorizeRoutes("coordinador", "docente", "estudiante"),
+  authorizeRoutes("COORDINADOR", "DOCENTE", "ESTUDIANTE"),
   getAllInstitution
 );
 
@@ -114,7 +114,7 @@ router.get(
 router.get(
   "/:id",
   verifyToken,
-  authorizeRoutes("coordinador", "docente", "estudiante"),
+  authorizeRoutes("COORDINADOR", "DOCENTE", "ESTUDIANTE"),
   getSingleInstitution
 );
 
@@ -166,7 +166,7 @@ router.get(
 router.patch(
   "/:id",
   verifyToken,
-  authorizeRoutes("coordinador"),
+  authorizeRoutes("COORDINADOR"),
   upDateInstitution
 );
 

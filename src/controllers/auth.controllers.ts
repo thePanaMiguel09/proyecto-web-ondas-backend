@@ -27,7 +27,7 @@ export const login: RequestHandler = async (req: Request, res: Response) => {
         id: userFind._id,
         rol: userFind.rol,
       },
-      JWT_SECRET as string,
+      JWT_SECRET,
       { expiresIn: "1h" }
     );
 

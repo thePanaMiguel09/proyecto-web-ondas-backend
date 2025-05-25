@@ -44,7 +44,7 @@ const router = Router();
  *       500:
  *         description: Error al obtener usuarios
  */
-router.get("/", verifyToken, authorizeRoutes("coordinador"), getUsers);
+router.get("/", verifyToken, authorizeRoutes("COORDINADOR", "DOCENTE", "ESTUDIANTE"), getUsers);
 
 /**
  * @swagger
@@ -131,7 +131,7 @@ router.get("/", verifyToken, authorizeRoutes("coordinador"), getUsers);
 router.post(
   "/register",
   verifyToken,
-  authorizeRoutes("coordinador"),
+  authorizeRoutes("COORDINADOR"),
   registrarUsuario
 );
 
@@ -139,9 +139,9 @@ router.get("/:id", verifyToken, getSingleUser);
 
 router.get("/rol/:rol", verifyToken, getUsersByRole);
 
-router.delete("/:id", verifyToken, authorizeRoutes("coordinador"), deleteUser);
+router.delete("/:id", verifyToken, authorizeRoutes("COORDINADOR"), deleteUser);
 
-router.patch("/:id", verifyToken, authorizeRoutes("coordinador"), upDateUser);
+router.patch("/:id", verifyToken, authorizeRoutes("COORDINADOR", "DOCENTE", "ESTUDIANTE"), upDateUser);
 
 //falta
 router.get("/profile", verifyToken, getUsers);
