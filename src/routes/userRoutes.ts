@@ -4,6 +4,7 @@ import {
   deleteUser,
   getSingleUser,
   getUsers,
+  getUsersByRole,
   registrarUsuario,
   upDateUser,
 } from "../controllers/user.controllers";
@@ -134,11 +135,9 @@ router.post(
   registrarUsuario
 );
 
-router.get(
-  "/:id",
-  verifyToken,
-  getSingleUser
-);
+router.get("/:id", verifyToken, getSingleUser);
+
+router.get("/rol/:rol", verifyToken, getUsersByRole);
 
 router.delete("/:id", verifyToken, authorizeRoutes("coordinador"), deleteUser);
 

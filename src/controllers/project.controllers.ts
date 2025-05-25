@@ -202,3 +202,5 @@ export const getCurrentState: RequestHandler = async (req, res) => {
     res.status(500).json({ msg: "Error al obtener estado del proyecto" });
   }
 };
+
+
