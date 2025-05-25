@@ -5,16 +5,11 @@ export const createInstitution = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const { name, location, id } = req.body;
+  const { name, location } = req.body;
   try {
-    const existInstitution = await Institucion.findOne({ id: id });
-    if (existInstitution)
-      res.status(403).json({ msg: "La institucion ya existe" });
-
     const newInstitution = new Institucion({
       nameInstitute: name,
       location,
-      id,
     });
     await newInstitution.save();
     res.status(201).json({ msg: "Institucion creada" });
@@ -29,7 +24,11 @@ export const getAllInstitution = async (
 ): Promise<void> => {
   try {
     const data = await Institucion.find();
-    if (!data) res.status(204).json({ msg: "No existen instituciones" });
+    if (!data) {
+      res.status(204).json({ msg: "No existen instituciones" });
+      return;
+    }
+
     res.status(200).json({ data: data });
   } catch (error) {
     res.status(500).json({ msg: "Error al obtener instituciones" });
@@ -51,7 +50,7 @@ export const getSingleInstitution = async (
     }
     res.status(200).json({ msg: "Institución encontrada", data: data });
   } catch (error) {
-    res.status(500).json({ msg: "Error al obtener institucio" });
+    res.status(500).json({ msg: "Error al obtener institución" });
   }
 };
 
@@ -64,7 +63,7 @@ export const upDateInstitution = async (
 
   try {
     const upDated = await Institucion.findOneAndUpdate(
-      { id: Number(id) },
+      { _id: id },
       updtes,
       { new: true, runValidators: true }
     );

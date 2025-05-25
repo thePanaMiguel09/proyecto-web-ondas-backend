@@ -10,7 +10,6 @@ export interface Location {
 export interface Institucion extends Document {
   nameInstitute: string;
   location: Location;
-  id: number;
   isActive: boolean;
 }
 
@@ -25,7 +24,7 @@ const InstitutionSchema = new Schema<Institucion>({
     city: { type: String, required: true },
     department: { type: String, required: true },
   },
-  id: { type: Number, required: true, unique: true },
+  
   isActive: {
     type: Boolean,
     default: true
