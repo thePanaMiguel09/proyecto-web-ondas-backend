@@ -20,6 +20,8 @@ export interface Project extends Document {
   estadoActual: string;
   avances: Avance[];
   historialEstados: Object[];
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const ProyectoSchema = new Schema<Project>(

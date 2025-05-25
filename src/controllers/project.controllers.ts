@@ -200,14 +200,17 @@ export const getCurrentState: RequestHandler = async (req, res) => {
   }
 };
 
-export const getProjectsByDocente:RequestHandler = async (req: Request, res: Response) => {
+export const getProjectsByDocente: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
   const { docenteId } = req.params;
 
   try {
     // Validamos que venga un ID
     if (!docenteId) {
-       res.status(400).json({ msg: "ID del docente requerido" });
-       return
+      res.status(400).json({ msg: "ID del docente requerido" });
+      return;
     }
 
     // Buscamos los proyectos del docente
@@ -217,13 +220,16 @@ export const getProjectsByDocente:RequestHandler = async (req: Request, res: Res
       .populate("docente", "nombres apellidos email"); // opcional
 
     if (proyectos.length === 0) {
-       res
-        .status(404)
-        .json({ msg: "No hay proyectos para este docente" });
-        return
+      res.status(404).json({ msg: "No hay proyectos para este docente" });
     }
 
-    res.status(200).json({ proyectos });
+    const proyectosFiltrados = proyectos.map((proyecto) => ({
+      titulo: proyecto.titulo,
+      createdAt: proyecto.createdAt,
+      _id: proyecto._id, // opcional: útil para navegación en frontend
+    }));
+
+    res.status(200).json({ proyectos: proyectosFiltrados });
   } catch (error) {
     console.error("Error al obtener proyectos del docente:", error);
     res.status(500).json({ msg: "Error del servidor", error });

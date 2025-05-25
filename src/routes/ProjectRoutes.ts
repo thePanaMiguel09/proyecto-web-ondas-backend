@@ -91,8 +91,12 @@ router.get("/", verifyToken, getAllProjects);
 
 router.get("/:id", verifyToken, getSingleProject);
 
-router.get("/by-docente/:docenteId", verifyToken,authorizeRoutes("DOCENTE", "COORDINADOR"), getProjectsByDocente);
-
+router.get(
+  "/by-docente/:docenteId",
+  verifyToken,
+  authorizeRoutes("DOCENTE", "COORDINADOR"),
+  getProjectsByDocente
+);
 
 router.post(
   "/advances/:id",

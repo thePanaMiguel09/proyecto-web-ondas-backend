@@ -62,11 +62,10 @@ export const upDateInstitution = async (
   const updtes = req.body;
 
   try {
-    const upDated = await Institucion.findOneAndUpdate(
-      { _id: id },
-      updtes,
-      { new: true, runValidators: true }
-    );
+    const upDated = await Institucion.findOneAndUpdate({ _id: id }, updtes, {
+      new: true,
+      runValidators: true,
+    });
 
     if (!upDated) res.status(404).json({ msg: "Institución no encontrada" });
     res.status(200).json(upDated);
