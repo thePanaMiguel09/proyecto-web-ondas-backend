@@ -163,3 +163,21 @@ export const upDateUser: RequestHandler = async (
     res.status(500).json({ msg: error });
   }
 };
+
+
+
+export const getSingleUser:RequestHandler = async(req:Request, res:Response) => {
+  const id = req.body;
+  try {
+    const user = await Usuario.findById(id);
+    if(!user) {
+      res.status(404).json({msg:"Usuario no encontrado"});
+      return;
+    }
+
+    res.status(200).json({msg:"Usuario encontrado", user:user});
+    return
+  } catch (error) {
+    res.status(500).json({msg:"Error interno del servidor", err: error})
+  }
+} 

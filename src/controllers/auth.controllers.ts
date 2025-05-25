@@ -2,7 +2,6 @@ import { Request, Response, RequestHandler } from "express";
 import User from "../models/User";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { json } from "stream/consumers";
 
 const JWT_SECRET = process.env.JWT_SECRET || "secretoXD";
 
@@ -98,11 +97,13 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
       { expiresIn: "1h" }
     );
 
-
-
-    res.status(201).json({ msg: "Cuenta creada con éxito", token: token,usuario: {
-        user: newUser
-      }, });
+    res.status(201).json({
+      msg: "Cuenta creada con éxito",
+      token: token,
+      usuario: {
+        user: newUser,
+      },
+    });
   } catch (error) {
     console.error("Error en signUp:", error);
     res.status(500).json({ msg: "Error interno del servidor" });

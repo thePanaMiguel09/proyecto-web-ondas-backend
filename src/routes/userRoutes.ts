@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   createAdmin,
   deleteUser,
+  getSingleUser,
   getUsers,
   registrarUsuario,
   upDateUser,
@@ -132,6 +133,8 @@ router.post(
   authorizeRoutes("coordinador"),
   registrarUsuario
 );
+
+router.get("/:id", verifyToken, authorizeRoutes("docentete, coordinador"), getSingleUser);
 
 router.delete("/:id", verifyToken, authorizeRoutes("coordinador"), deleteUser);
 
