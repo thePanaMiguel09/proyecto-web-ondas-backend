@@ -16,12 +16,10 @@ export const createProject: RequestHandler = async (
     integrantes,
     observaciones,
     estadoActual,
-    id,
   } = req.body;
 
   try {
-    const alreadyExist = await Proyecto.findOne({ id: Number(id) });
-    if (alreadyExist) res.status(401).json({ msg: "Proyecto ya existente" });
+  
 
     const newProyecto = new Proyecto({
       titulo,
@@ -34,14 +32,16 @@ export const createProject: RequestHandler = async (
       integrantes,
       observaciones,
       estadoActual,
-      id,
+     
     });
 
     await newProyecto.save();
 
     res.status(201).json("Proyecto Creado");
+    return;
   } catch (error) {
     res.status(500).json({ error });
+    return;
   }
 };
 

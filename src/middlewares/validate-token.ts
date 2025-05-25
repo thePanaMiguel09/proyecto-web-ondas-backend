@@ -13,7 +13,6 @@ export const verifyToken = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-
   const token = req.header("Authorization")?.replace("Bearer ", "");
   if (!token) {
     res.status(401).json({ msg: "Acceso Denegado" });

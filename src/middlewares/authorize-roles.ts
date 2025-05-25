@@ -4,7 +4,7 @@ import { AuthRequest } from "./validate-token";
 export const authorizeRoutes = (...roles: string[]): RequestHandler => {
   return ((req, res, next) => {
     const usuario = (req as AuthRequest).usuario;
-    console.log("rol " + usuario.rol)
+    console.log("rol " + usuario.rol);
     if (usuario.rol === "SUPERADMIN") {
       return next();
     }
