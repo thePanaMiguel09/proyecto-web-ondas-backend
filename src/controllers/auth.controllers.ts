@@ -51,15 +51,25 @@ export const login: RequestHandler = async (req: Request, res: Response) => {
 };
 
 export const signUp: RequestHandler = async (req: Request, res: Response) => {
-  const { nombres, apellidos, email, password, id } = req.body;
-
-  
+  const { nombres, apellidos, email, password, id, tipoIdentificacion } =
+    req.body;
 
   try {
+    if (
+      !nombres ||
+      !apellidos ||
+      !email ||
+      !password ||
+      !id ||
+      !tipoIdentificacion
+    ) {
+      res.status(400).json({ msg: "Todos los campos son obligatorios" });
+      return;
+    }
     const verifyEmail = await User.findOne({ email: email });
     const verifyId = await User.findOne({ numeroIdentificacion: Number(id) });
 
-    if (verifyEmail && verifyId) {
+    if (verifyEmail || verifyId) {
       res.status(401).json({
         msg: "Ya existe una cuenta con este correo o número de identificación",
       });
@@ -74,6 +84,7 @@ export const signUp: RequestHandler = async (req: Request, res: Response) => {
       email: email,
       contraseña: passwordEncrypted,
       numeroIdentificacion: id,
+      tipoIdentificacion: tipoIdentificacion,
     });
 
     await newUser.save();

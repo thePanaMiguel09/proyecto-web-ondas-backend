@@ -1,4 +1,4 @@
-import {cloudinary} from "../config/cloudinary-config";
+import { cloudinary } from "../config/cloudinary-config";
 import { v2 as cloudinaryV2 } from "cloudinary";
 import fs from "fs";
 
