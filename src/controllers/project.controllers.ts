@@ -19,8 +19,6 @@ export const createProject: RequestHandler = async (
   } = req.body;
 
   try {
-  
-
     const newProyecto = new Proyecto({
       titulo,
       area,
@@ -32,7 +30,6 @@ export const createProject: RequestHandler = async (
       integrantes,
       observaciones,
       estadoActual,
-     
     });
 
     await newProyecto.save();
@@ -203,4 +200,32 @@ export const getCurrentState: RequestHandler = async (req, res) => {
   }
 };
 
+export const getProjectsByDocente:RequestHandler = async (req: Request, res: Response) => {
+  const { docenteId } = req.params;
 
+  try {
+    // Validamos que venga un ID
+    if (!docenteId) {
+       res.status(400).json({ msg: "ID del docente requerido" });
+       return
+    }
+
+    // Buscamos los proyectos del docente
+    const proyectos = await Proyecto.find({ docente: docenteId })
+      .populate("institucion", "nameInstitute") // opcional: para mostrar nombre de la institución
+      .populate("integrantes", "nombres apellidos email") // opcional
+      .populate("docente", "nombres apellidos email"); // opcional
+
+    if (proyectos.length === 0) {
+       res
+        .status(404)
+        .json({ msg: "No hay proyectos para este docente" });
+        return
+    }
+
+    res.status(200).json({ proyectos });
+  } catch (error) {
+    console.error("Error al obtener proyectos del docente:", error);
+    res.status(500).json({ msg: "Error del servidor", error });
+  }
+};
