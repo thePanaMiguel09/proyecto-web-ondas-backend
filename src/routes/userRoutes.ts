@@ -134,7 +134,11 @@ router.post(
   registrarUsuario
 );
 
-router.get("/:id", verifyToken, authorizeRoutes("docentete, coordinador"), getSingleUser);
+router.get(
+  "/:id",
+  verifyToken,
+  getSingleUser
+);
 
 router.delete("/:id", verifyToken, authorizeRoutes("coordinador"), deleteUser);
 

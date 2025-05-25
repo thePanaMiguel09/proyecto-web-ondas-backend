@@ -47,8 +47,6 @@ export const registrarUsuario = async (
 
     await findUser.save();
 
-    
-
     switch (rol) {
       case "ESTUDIANTE":
         await Usuario.findByIdAndUpdate(id, { gradoEscolar }, { new: true });
@@ -164,20 +162,24 @@ export const upDateUser: RequestHandler = async (
   }
 };
 
+export const getSingleUser: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const id = req.params.id;
 
-
-export const getSingleUser:RequestHandler = async(req:Request, res:Response) => {
-  const id = req.body;
+  console.log("ID " + id);
+  
   try {
-    const user = await Usuario.findById(id);
-    if(!user) {
-      res.status(404).json({msg:"Usuario no encontrado"});
+    const user = await Usuario.findById(id).populate("institucion");
+    if (!user) {
+      res.status(404).json({ msg: "Usuario no encontrado" });
       return;
     }
 
-    res.status(200).json({msg:"Usuario encontrado", user:user});
-    return
+    res.status(200).json({ msg: "Usuario encontrado", user: user });
+    return;
   } catch (error) {
-    res.status(500).json({msg:"Error interno del servidor", err: error})
+    res.status(500).json({ msg: "Error interno del servidor", err: error });
   }
-} 
+};
