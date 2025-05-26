@@ -5,6 +5,7 @@ import {
   getAllProjects,
   getCurrentState,
   getProjectsByDocente,
+  getProjectsByEstudiante,
   getSingleProject,
   updateState,
 } from "../controllers/project.controllers";
@@ -96,6 +97,18 @@ router.get(
   verifyToken,
   authorizeRoutes("DOCENTE", "COORDINADOR"),
   getProjectsByDocente
+);
+
+router.get(
+  "/by-estudiante/:estudianteId",
+  verifyToken,
+  authorizeRoutes(
+    "DOCENTE",
+    "COORDINADOR",
+    "ESTUDIANTE",
+  ),
+      getProjectsByEstudiante
+
 );
 
 router.post(

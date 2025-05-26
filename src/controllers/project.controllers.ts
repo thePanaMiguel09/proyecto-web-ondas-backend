@@ -235,3 +235,34 @@ export const getProjectsByDocente: RequestHandler = async (
     res.status(500).json({ msg: "Error del servidor", error });
   }
 };
+
+export const getProjectsByEstudiante: RequestHandler = async (
+  req: Request,
+  res: Response
+) => {
+  const  estudianteId = req.params.estudianteId;
+
+  try {
+    // Validamos que venga un ID
+    if (!estudianteId) {
+      res.status(400).json({ msg: "ID del estudiante requerido" });
+      return;
+    }
+
+    // Buscamos los proyectos del estudiante
+    const proyectos = await Proyecto.find({ integrantes: estudianteId })
+      .populate("institucion", "nameInstitute") // opcional: para mostrar nombre de la institución
+      .populate("integrantes", "nombres apellidos email") // opcional
+      .populate("docente", "nombres apellidos email"); // opcional
+
+    if (proyectos.length === 0) {
+      res.status(404).json({ msg: "No hay proyectos para este estudiante" });
+      return;
+    }
+
+    res.status(200).json({ proyectos: proyectos });
+  } catch (error) {
+    console.error("Error al obtener proyectos del docente:", error);
+    res.status(500).json({ msg: "Error del servidor", error });
+  }
+};
