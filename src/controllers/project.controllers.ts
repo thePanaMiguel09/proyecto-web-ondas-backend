@@ -49,7 +49,7 @@ export const createAdvance: RequestHandler = async (
   try {
     const descripcion = req.body.descripcion;
     const id = req.params.id;
-    const file = req.file;
+    const file = req.files as Express.Multer.File[];
 
     if (!file) {
       res.status(400).json({ msg: "No se encontró el archivo para subir" });
@@ -65,17 +65,21 @@ export const createAdvance: RequestHandler = async (
 
     // multer-storage-cloudinary pone la URL en file.path o file.url según versión
     // para asegurar, usa file.path o file.secure_url
-    const urlAvance = (file as any).path || (file as any).secure_url;
+    const evidencias = file
+      .map((file) => (file as any).path || (file as any).secure_url)
+      .filter(Boolean);
 
-    if (!urlAvance) {
-      res.status(500).json({ msg: "Error al obtener la URL de Cloudinary" });
-      return;
-    }
+    if (evidencias.length === 0) {
+       res
+        .status(500)
+        .json({ msg: "Error al obtener URLs de Cloudinary" });
+        return;
+      }
 
     // Crea el objeto de avance
     const nuevoAvance = {
       descripcion,
-      evidencias: [urlAvance], // arreglo porque el schema lo espera así
+      evidencias, // arreglo porque el schema lo espera así
       fecha: new Date(),
     };
 
@@ -240,7 +244,7 @@ export const getProjectsByEstudiante: RequestHandler = async (
   req: Request,
   res: Response
 ) => {
-  const  estudianteId = req.params.estudianteId;
+  const estudianteId = req.params.estudianteId;
 
   try {
     // Validamos que venga un ID

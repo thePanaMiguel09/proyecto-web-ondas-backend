@@ -102,20 +102,15 @@ router.get(
 router.get(
   "/by-estudiante/:estudianteId",
   verifyToken,
-  authorizeRoutes(
-    "DOCENTE",
-    "COORDINADOR",
-    "ESTUDIANTE",
-  ),
-      getProjectsByEstudiante
-
+  authorizeRoutes("DOCENTE", "COORDINADOR", "ESTUDIANTE"),
+  getProjectsByEstudiante
 );
 
 router.post(
   "/advances/:id",
   verifyToken,
   authorizeRoutes("ESTUDIANTE", "DOCENTE"),
-  upload.single("file"),
+  upload.array("file"),
   createAdvance
 );
 
