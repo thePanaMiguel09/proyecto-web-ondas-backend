@@ -70,11 +70,9 @@ export const createAdvance: RequestHandler = async (
       .filter(Boolean);
 
     if (evidencias.length === 0) {
-       res
-        .status(500)
-        .json({ msg: "Error al obtener URLs de Cloudinary" });
-        return;
-      }
+      res.status(500).json({ msg: "Error al obtener URLs de Cloudinary" });
+      return;
+    }
 
     // Crea el objeto de avance
     const nuevoAvance = {
